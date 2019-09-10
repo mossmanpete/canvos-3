@@ -1,0 +1,10 @@
+{"files":[
+{"name":"desktop/","group":["all"]},
+{"name":"documents/","group":["all"]},
+{"name":"drives/","group":["all"]},
+{"name":"music/","group":["all"]},
+{"name":"pictures/","group":["all"]},
+{"name":"templates/","group":["all"]},
+{"name":"trash/","group":["all"]},
+{"name":"videos/","group":["all"]},
+]}
