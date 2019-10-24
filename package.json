@@ -1,0 +1,23 @@
+{
+  "name": "canvos-3",
+  "version": "1.0.0",
+  "description": "CanvOS 2.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "no u"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creatively-stupid/canvos-3.git"
+  },
+  "keywords": [
+    "CanvOS",
+    "CanvOS3"
+  ],
+  "author": "RedMikePumpkin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/creatively-stupid/canvos-3/issues"
+  },
+  "homepage": "https://github.com/creatively-stupid/canvos-3#readme"
+}
