@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/creatively-stupid/canvos-3.git"
   },
+  "dependencies": {
+    "sorted-array": "^2.0.4"
+  },
   "keywords": [
     "CanvOS",
     "CanvOS3"
