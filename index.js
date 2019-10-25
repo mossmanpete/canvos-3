@@ -6,23 +6,25 @@ process.stdout.write("starting\n");
 var ports = new SortedArray([]);
 var servers = {};
 
-var server = net.createServer(function (socket) {
-  process.stdout.write("[Server] Established matchmaking connection\n");
+var server = net.createServer(async function (socket) {
+  process.stdout.write("[Server] Established matchmaking connection\n\n");
 	socket.write("CanvOS 2.1 booting up...\r\n");
 	var port, i = 0;
-	for (; i < 50000; i++) {
-		if (i === 5000) socket.write("Searching for an available port...\r\n");
-		port = Math.floor(Math.random()*40069) + 2000;
-	  process.stdout.write("[Matchmaking] Trying port ");
+	for (; i < 100000; i++) {
+		if (i === 10000) socket.write("Searching for an available port");
+		else if (i > 10000 & i % 10000 === 0) socket.write(".");
+		if (i % 1000 === 0) await pause();
+		port = Math.floor(Math.random()*40000) + 2069;
+	  process.stdout.write("\n[Matchmaking] Trying port ");
 		process.stdout.write(port.toString());
 	  process.stdout.write(" (");
-		process.stdout.write(i.toString());
-	  process.stdout.write(")\n");
+		process.stdout.write((100000-i).toString());
+	  process.stdout.write(")");
 		if (ports.search(port) === -1) break;
 	}
 	if (i >= 49999) {
 			process.stdout.write("[Matchmaking] Failed to locate port\n");
-			socket.write("Server is full, Try again later\r\n");
+			socket.write("\r\nServer is full, Try again later\r\n");
 			socket.destroy();
 			process.stdout.write("[Matchmaking] Connection ended\n");
 	} else {
@@ -43,24 +45,28 @@ var server = net.createServer(function (socket) {
 
 server.listen(42069);
 
+function pause() {return new Promise(yey => setTimeout(yey, 0))}
 
 function createServer(port) {
 	ports.insert(port);
-	var serv = net.createServer(function (socket) {
-	  process.stdout.write("[Server] Established OS connection on port ");
-		process.stdout.write(port.toString());
-		process.stdout.write("\n");
-		socket.write("CanvOS 2.1 OS\r\n");
-		socket.write("Type \"nc\" for verification: ");
+	var serv = net.createServer(async function (socket) {;
 		socket.on("data", (data) => {
 			serv._readfunc(data.toString());
 			serv._readfunc = (data) => {};
 		});
-		serv._readfunc = (data) => {
-			socket.write("Recieved data\n");
+		process.stdout.write("[Server] Established OS connection on port ");
+		process.stdout.write(port.toString());
+		process.stdout.write("\n");
+		socket.write("CanvOS 2.1 OS\r\n");
+		socket.write("Type \"nc\" for verification: ");
+		socket.write("Recieved data " + await serv._read() + "\r\n");
 
-		};
 	});
+	serv._read = () => {
+		return new Promise(yey => {
+			serv._readfunc = yey;
+		});
+	}
 	serv._readfunc = (data) => {};
 	serv.listen(port);
   servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
