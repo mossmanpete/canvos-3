@@ -21,9 +21,19 @@ var server = net.createServer(function(socket) {
 	process.stdout.write("[Matchmaking] Using port ");
 	process.stdout.write(port.toString());
 	process.stdout.write("\n");
+	process.stdout.write("[Server] Starting OS server on port ");
+	process.stdout.write(port.toString());
+	process.stdout.write("\n");
 	socket.write("\r\n");
 	socket.destroy();
 	process.stdout.write("[Matchmaking] Connection ended\n");
 });
 
 server.listen(42069);
+
+
+function createServer(port) {
+	var serv = net.createServer(function (socket) {
+		
+	});
+}
