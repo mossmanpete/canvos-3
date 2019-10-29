@@ -1,3 +1,5 @@
+var fs = require("fs");
+
 function pause() {return new Promise(yey => setTimeout(yey, 0))}
 
 class CStream {
@@ -6,7 +8,7 @@ class CStream {
 		this.readfunc = () => {};
 	}
 	puts(data = "") {
-			this.buffer += data.toString();
+			this.buffer += data;
 			this.readfunc();
 			this.readfunc = () => {};
 	}
@@ -39,4 +41,20 @@ class CStream {
 	}
 }
 
-module.exports.CStream = CStream;
+class CDirectory {
+	constructor(path: "/") {
+		this.path = path;
+	}
+	reload() {
+
+	}
+	store() {
+
+	}
+
+}
+
+module.exports = {
+	CStream: CStream,
+	CDirectory: CDirectory
+}
