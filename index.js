@@ -1,6 +1,6 @@
 var net = require("net");
 var SortedArray = require("sorted-array");
-var CStream = require("./cstream.js");
+var Files = require("./files.js");
 
 process.stdout.write("starting\n");
 
@@ -63,7 +63,7 @@ function createServer(port) {
 		socket.write("Recieved data\n");
 
 	});
-	serv.stdin = new CStream();
+	serv.stdin = new Files.CStream();
 	serv.listen(port);
   servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
 		serv.close(() => {

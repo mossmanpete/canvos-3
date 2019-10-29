@@ -1,3 +1,5 @@
+function pause() {return new Promise(yey => setTimeout(yey, 0))}
+
 class CStream {
 	constructor(data = "") {
 		this.buffer = data;
@@ -37,6 +39,4 @@ class CStream {
 	}
 }
 
-function pause() {return new Promise(yey => setTimeout(yey, 0))}
-
-module.exports = CStream;
+module.exports.CStream = CStream;
