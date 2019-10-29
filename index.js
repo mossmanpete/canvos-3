@@ -1,5 +1,6 @@
 var net = require("net");
 var SortedArray = require("sorted-array");
+var CStream = require("./cstream.js");
 
 process.stdout.write("starting\n");
 
@@ -51,48 +52,18 @@ function createServer(port) {
 	ports.insert(port);
 	var serv = net.createServer(async function (socket) {;
 		socket.on("data", (data) => {
-			serv._stringBuffer += data.toString();
-			serv._readfunc();
-			serv._readfunc = () => {};
+			serv.stdin.puts(data);
 		});
 		process.stdout.write("[Server] Established OS connection on port ");
 		process.stdout.write(port.toString());
 		process.stdout.write("\n");
 		socket.write("CanvOS 2.1 OS\n");
 		socket.write("Type \"nc\" for verification: ");
-		var data = await serv._gets();
+		var data = await serv.stdin.gets();
 		socket.write("Recieved data\n");
 
 	});
-	serv._stringBuffer = "",
-	serv._getc = function(wait = true) {
-		return new Promise(yey => {
-			if (wait && serv._stringBuffer.length === 0) {
-				// wait for data
-				serv._readfunc = () => {
-					var char = serv._stringBuffer[0];
-					serv._stringBuffer = serv._stringBuffer.slice(1, serv._stringBuffer.length);
-					yey(char);
-				}
-			} else {
-				// return char
-				var char = serv._stringBuffer[0];
-				serv._stringBuffer = serv._stringBuffer.slice(1, serv._stringBuffer.length);
-				yey(char);
-			}
-		});
-	}
-	serv._gets = async function(wait = true) {
-		var buf = "";
-		while (1) {
-			var char = await serv._getc(wait);
-			buf += char;
-			if (!wait && char === "") return buf;
-			if (char === "\n") return buf;
-			await pause();
-		}
-	}
-	serv._readfunc = () => {};
+	serv.stdin = new CStream();
 	serv.listen(port);
   servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
 		serv.close(() => {
