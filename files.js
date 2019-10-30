@@ -46,14 +46,9 @@ class CStream {
 }
 
 class CDirectory {
-<<<<<<< HEAD
 	constructor(loc: "/", root = null) {
 		this.loc = loc;
 		this.root = null;
-=======
-	constructor(path = "/") {
-		this.path = path;
->>>>>>> f9604f8f7e575f294536f9d566a97add071014c9
 	}
 	load() {
 		if (root !== null) throw new Error("unable to load / store from non-root!");
