@@ -1,4 +1,5 @@
 var fs = require("fs");
+var path = require("path");
 
 function pause() {return new Promise(yey => setTimeout(yey, 0))}
 
@@ -39,22 +40,37 @@ class CStream {
 			await pause();
 		}
 	}
+	CType() {
+		return "CStream";
+	}
 }
 
 class CDirectory {
-	constructor(path: "/") {
-		this.path = path;
+	constructor(loc: "/", root = null) {
+		this.loc = loc;
+		this.root = null;
 	}
-	reload() {
-
+	load() {
+		if (root !== null) throw new Error("unable to load / store from non-root!");
 	}
 	store() {
-
+		if (root !== null) throw new Error("unable to load / store from non-root!");
 	}
-
+	seek(loc: ".") {
+		if (!path.isAbsolute(loc)) loc = path.join(this.loc, loc).normalize();
+		var src = root;
+		if (src === null) src = this;
+	}
+	CType() {
+		return "CDirectory";
+	}
 }
 
 module.exports = {
 	CStream: CStream,
-	CDirectory: CDirectory
+	CDirectory: CDirectory,
+}
+
+async function deepLoad() {
+
 }
