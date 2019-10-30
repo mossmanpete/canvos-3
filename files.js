@@ -29,20 +29,20 @@ class CStream {
 			}
 		});
 	}
-	async gets(wait = true) {
+	async gets(wait = true, terminator = "\n") {
 		var buf = "";
 		while (1) {
 			var char = await this.getc(wait);
 			buf += char;
 			if (!wait && char === "") return buf;
-			if (char === "\n") return buf;
+			if (char === terminator) return buf;
 			await pause();
 		}
 	}
 }
 
 class CDirectory {
-	constructor(path: "/") {
+	constructor(path = "/") {
 		this.path = path;
 	}
 	reload() {
