@@ -1,10 +1,9 @@
 var net = require("net");
-var SortedArray = require("sorted-array");
 var Files = require("./files.js");
 
 process.stdout.write("starting\n");
 
-var ports = new SortedArray([]);
+var ports = new Set([]);
 var servers = {};
 
 var server = net.createServer(async function (socket) {
@@ -21,7 +20,7 @@ var server = net.createServer(async function (socket) {
 	  process.stdout.write(" (");
 		process.stdout.write((100000-i).toString());
 	  process.stdout.write(")\n");
-		if (ports.search(port) === -1) break;
+		if (ports.has(port) === -1) break;
 	}
 	if (i >= 49999) {
 			process.stdout.write("[Matchmaking] Failed to locate port\n");
@@ -33,7 +32,7 @@ var server = net.createServer(async function (socket) {
 		process.stdout.write(port.toString());
 		process.stdout.write("\n");
 		socket.write("\nConnect to port ");
-	  socket.write(port.toString());
+		socket.write(port.toString());
 		socket.write("\n");
 		createServer(port);
 		process.stdout.write("[Server] Starting OS server on port ");
@@ -49,7 +48,7 @@ server.listen(42069);
 function pause() {return new Promise(yey => setTimeout(yey, 0))}
 
 function createServer(port) {
-	ports.insert(port);
+	ports.add(port);
 	var serv = net.createServer(async function (socket) {;
 		socket.on("data", (data) => {
 			serv.stdin.puts(data);
@@ -65,9 +64,9 @@ function createServer(port) {
 	});
 	serv.stdin = new Files.CStream();
 	serv.listen(port);
-  servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
+	servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
 		serv.close(() => {
-			ports.remove(port);
+			ports.delete(port);
 			servers[port.toString()] = undefined;
 		});
 		process.stdout.write("[Server] OS server on port ");

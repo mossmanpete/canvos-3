@@ -30,13 +30,13 @@ class CStream {
 			}
 		});
 	}
-	async gets(wait = true) {
+	async gets(wait = true, terminator = "\n") {
 		var buf = "";
 		while (1) {
 			var char = await this.getc(wait);
 			buf += char;
 			if (!wait && char === "") return buf;
-			if (char === "\n") return buf;
+			if (char === terminator) return buf;
 			await pause();
 		}
 	}
@@ -46,9 +46,14 @@ class CStream {
 }
 
 class CDirectory {
+<<<<<<< HEAD
 	constructor(loc: "/", root = null) {
 		this.loc = loc;
 		this.root = null;
+=======
+	constructor(path = "/") {
+		this.path = path;
+>>>>>>> f9604f8f7e575f294536f9d566a97add071014c9
 	}
 	load() {
 		if (root !== null) throw new Error("unable to load / store from non-root!");
