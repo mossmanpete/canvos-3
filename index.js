@@ -65,7 +65,7 @@ function createServer(port) {
 	});
 	serv.stdin = new Files.CStream();
 	serv.listen(port);
-  servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
+	servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
 		serv.close(() => {
 			ports.remove(port);
 			servers[port.toString()] = undefined;
