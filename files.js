@@ -13,6 +13,9 @@ class CStream {
 			this.readfunc();
 			this.readfunc = () => {};
 	}
+	putc(char) {
+		puts(String.fromCharCode(char));
+	}
 	getc(wait = true) {
 		return new Promise(yey => {
 			if (wait && this.buffer.length === 0) {
@@ -43,34 +46,111 @@ class CStream {
 	CType() {
 		return "CStream";
 	}
+	FileType() {
+		return "stream";
+	}
 }
 
 class CDirectory {
-	constructor(loc: "/", root = null) {
+	constructor(loc = "/", root = null, contents = []) {
 		this.loc = loc;
-		this.root = null;
+		this.root = root;
+		this.contents = contents;
 	}
-	load() {
+	async load() {
 		if (root !== null) throw new Error("unable to load / store from non-root!");
+		this.contents = await deepLoad();
 	}
-	store() {
+	async store() {
 		if (root !== null) throw new Error("unable to load / store from non-root!");
-	}
-	seek(loc: ".") {
-		if (!path.isAbsolute(loc)) loc = path.join(this.loc, loc).normalize();
-		var src = root;
-		if (src === null) src = this;
+		await deepStore(this.contents)
 	}
 	CType() {
 		return "CDirectory";
 	}
+	FileType() {
+		return "dir";
+	}
+}
+
+class CLink {
+	constructor() {
+
+	}
+	CType() {
+		return "CLink";
+	}
+	FileType() {
+		return "link";
+	}
+}
+
+class CFile {
+	constructor() {
+
+	}
+	CType() {
+		return "CFile";
+	}
+	FileType() {
+		return "file";
+	}
+}
+
+class CPerms {
+	constructor() {
+
+	}
+	CType() {
+		return "CPerms";
+	}
+}
+
+class CObj {
+	constructor(object, name, path, perms = "+all+") {
+		this.object = object;
+		this.name = name;
+		this.type = object.FileType();
+	}
+	CType() {
+		return "CObj";
+	}
+}
+
+class FD {
+
+}
+
+class FStream extends FD {
+
+}
+
+class FData extends FD {
+
+}
+
+class FDirectory extends FD {
+
+}
+
+class FLink extends FD {
+
 }
 
 module.exports = {
 	CStream: CStream,
 	CDirectory: CDirectory,
+	CFile: CFile,
+	CLink: CLink,
+	CPerms: CPerms,
+	FD: FD
 }
 
-async function deepLoad() {
+async function deepLoad(location = "/") {
+	fs.readdir(location, (err, files) => {
+
+	});
+}
+async function deepStore(content, location = "/") {
 
 }

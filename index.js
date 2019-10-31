@@ -22,7 +22,7 @@ var server = net.createServer(async function (socket) {
 	  process.stdout.write(")\n");
 		if (ports.has(port) === -1) break;
 	}
-	if (i >= 49999) {
+	if (i >= 99999) {
 			process.stdout.write("[Matchmaking] Failed to locate port\n");
 			socket.write("\nServer is full, Try again later\n");
 			socket.destroy();
