@@ -1,6 +1,8 @@
 # Canvos v3
 Reconstructed from the ground up to be better
 
+# ! currently updating files, do not clone
+
 ## New Features
 - Client now runs in app as opposed to web browser (faster, better performance)
 - Can utilize storage both on host and client devices, like two drives
