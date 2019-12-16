@@ -1,7 +1,7 @@
 # Canvos v3
 Reconstructed from the ground up to be better
 
-# ! currently updating files, do not clone
+# currently updating files, do not clone
 
 ## New Features (as opposed to old CanvOS versions)
 - Client now runs in app as opposed to web browser (faster, better performance)
