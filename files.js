@@ -1,5 +1,6 @@
 var fs = require("fs");
 var path = require("path");
+var typeparse = require("./typeparse.js")
 
 function pause() {return new Promise(yey => setTimeout(yey, 0))}
 
@@ -98,19 +99,63 @@ class CFile {
 }
 
 class CPerms {
-	constructor() {
-
+	constructor(perm = "+all+") {
+		this.perm = perm;
+	}
+	check(user, operation) {
+		var sec = perm.split("/");
+		if (sec.length === 1) {
+			return CPerms.checker(user, sec[0]);
+		} else if (sec.length === 2) {
+			if (operation === "w") {
+				// W
+				return CPerms.checker(user, sec[1]);
+			} else {
+				// SRE
+				return CPerms.checker(user, sec[0]);
+			}
+		} else if (sec.length === 3) {
+			if (operation === "s") {
+				// S
+				return CPerms.checker(user, sec[0]);
+			} else if (operation === "w") {
+				// W
+				return CPerms.checker(user, sec[2]);
+			} else {
+				// RE
+				return CPerms.checker(user, sec[1]);
+			}
+		} else if (sec.length === 4) {
+			if (operation === "s") {
+				// S
+				return CPerms.checker(user, sec[0]);
+			} else if (operation === "r") {
+				// R
+				return CPerms.checker(user, sec[1]);
+			} else if (operation === "e") {
+				// E
+				return CPerms.checker(user, sec[2]);
+			} else {
+				// W
+				return CPerms.checker(user, sec[3]);
+			}
+		}
+		return false;
 	}
 	CType() {
 		return "CPerms";
 	}
+	static checker(user, p) {
+
+	}
 }
 
 class CObj {
-	constructor(object, name, path, perms = "+all+") {
+	constructor(object, name, perms) {
 		this.object = object;
 		this.name = name;
 		this.type = object.FileType();
+		this.perms = perms;
 	}
 	CType() {
 		return "CObj";

@@ -20,7 +20,7 @@ var server = net.createServer(async function (socket) {
 	  process.stdout.write(" (");
 		process.stdout.write((100000-i).toString());
 	  process.stdout.write(")\n");
-		if (ports.has(port) === -1) break;
+		if (!ports.has(port)) break;
 	}
 	if (i >= 99999) {
 			process.stdout.write("[Matchmaking] Failed to locate port\n");
