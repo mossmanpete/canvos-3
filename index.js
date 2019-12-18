@@ -56,7 +56,7 @@ function createServer(port) {
 		process.stdout.write("[Server] Established OS connection on port ");
 		process.stdout.write(port.toString());
 		process.stdout.write("\n");
-		socket.write("CanvOS 2.1 OS\n");
+		socket.write("CanvOS 3 OS\n");
 		socket.write("Type \"nc\" for verification: ");
 		var data = await serv.stdin.gets();
 		socket.write("Recieved data\n");

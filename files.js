@@ -111,33 +111,8 @@ class CPerms {
 				// W
 				return CPerms.checker(user, sec[1]);
 			} else {
-				// SRE
-				return CPerms.checker(user, sec[0]);
-			}
-		} else if (sec.length === 3) {
-			if (operation === "s") {
-				// S
-				return CPerms.checker(user, sec[0]);
-			} else if (operation === "w") {
-				// W
-				return CPerms.checker(user, sec[2]);
-			} else {
-				// RE
-				return CPerms.checker(user, sec[1]);
-			}
-		} else if (sec.length === 4) {
-			if (operation === "s") {
-				// S
-				return CPerms.checker(user, sec[0]);
-			} else if (operation === "r") {
 				// R
-				return CPerms.checker(user, sec[1]);
-			} else if (operation === "e") {
-				// E
-				return CPerms.checker(user, sec[2]);
-			} else {
-				// W
-				return CPerms.checker(user, sec[3]);
+				return CPerms.checker(user, sec[0]);
 			}
 		}
 		return false;
@@ -146,7 +121,73 @@ class CPerms {
 		return "CPerms";
 	}
 	static checker(user, p) {
+		/*
+		format:
 
+		name: /[a-zA-z_\-][a-zA-z_\-0-9]{3,31/
+		user: [+] name [+]
+		group: [-] name [-]
+		entity: user
+		        group
+						or
+		or: and [|] and
+		    and
+		and: not [&] not
+		     not
+		not: [!] paren
+		     paren
+		paren: [(] entity [)]
+					 entity
+
+		!(-leader-&-workspace-)|+bill+
+
+
+		*/
+		// step 1: t o k e n i z e
+		var classA = "abcdefghijklmnopqrstuvwxyzABCDEFGHJIKLMNOPQRSTUVWXYZ0123456789-_";
+		var classB = "|&!()+-";
+		var lastCl = 2;
+		var getCl = ch => {
+			if (classA.indexOf(ch) !== -1) return 0;
+			if (classB.indexOf(ch) !== -1) return 1;
+			return 2;
+		}
+		var tokens = [];
+		var currenttoken = "";
+		for(var i = 0; i < p.length; i++) {
+			var ch = p[i];
+			var cl = getCl(ch);
+			if (cl === 0) {
+				if (lastCl === 0) {
+					currenttoken += ch;
+				} else if (lastCl === 1) {
+					tokens.push([1, currenttoken]);
+					currenttoken = ch;
+				} else {
+					currenttoken = ch;
+				}
+			} else if(cl === 1) {
+				if (lastCl === 0) {
+					tokens.push([0, currenttoken]);
+					currenttoken = ch;
+				} else if (lastCl === 1) {
+					tokens.push([1, currenttoken]);
+					currenttoken = ch;
+				} else {
+					currenttoken = ch;
+				}
+			} else {
+				if (lastCl === 0) {
+					tokens.push([0, currenttoken]);
+				} else if (lastCl === 1) {
+					tokens.push([1, currenttoken]);
+				} else {
+
+				}
+			}
+			lastCl = cl;
+		}
+		tokens.push([lastCl, currenttoken]);
 	}
 }
 
