@@ -4,4 +4,5 @@ all: push
 push:
 	git add .
 	git commit -m "Makefile commit $(shell date)"
+	echo "Makefile commit $(shell date)"
 	git push origin master
