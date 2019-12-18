@@ -1,5 +1,6 @@
 var net = require("net");
-var Files = require("./files.js");
+var Stream = require("./stream.js");
+var Perms = require("./perms.js");
 
 process.stdout.write("starting\n");
 
@@ -8,12 +9,12 @@ var servers = {};
 
 var server = net.createServer(async function (socket) {
   process.stdout.write("[Server] Established matchmaking connection\n");
-	socket.write("CanvOS 2.1 booting up...");
+	socket.write("CanvOS3 booting up...");
 	var port, i = 0;
 	for (; i < 100000; i++) {
 		if (i === 10000) socket.write("\nSearching for an available port");
 		else if (i > 10000 & i % 10000 === 0) socket.write(".");
-		if (i % 1000 === 0) await pause();
+		if (i % 1000 === 0) await pause(0);
 		port = Math.floor(Math.random()*40000) + 2069;
 	  process.stdout.write("[Matchmaking] Trying port ");
 		process.stdout.write(port.toString());
@@ -23,10 +24,10 @@ var server = net.createServer(async function (socket) {
 		if (!ports.has(port)) break;
 	}
 	if (i >= 99999) {
-			process.stdout.write("[Matchmaking] Failed to locate port\n");
-			socket.write("\nServer is full, Try again later\n");
-			socket.destroy();
-			process.stdout.write("[Matchmaking] Connection ended\n");
+		process.stdout.write("[Matchmaking] Failed to locate port\n");
+		socket.write("\nServer is full, Try again later\n");
+		socket.destroy();
+		process.stdout.write("[Matchmaking] Connection ended\n");
 	} else {
 		process.stdout.write("[Matchmaking] Using port ");
 		process.stdout.write(port.toString());
@@ -44,8 +45,10 @@ var server = net.createServer(async function (socket) {
 });
 
 server.listen(42069);
+process.stdout.write("[Server] CanvOS3 is now ready for requests\n");
 
-function pause() {return new Promise(yey => setTimeout(yey, 0))}
+
+function pause(m){return new Promise(h=>setTimeout(h,m))}
 
 function createServer(port) {
 	ports.add(port);
@@ -56,13 +59,13 @@ function createServer(port) {
 		process.stdout.write("[Server] Established OS connection on port ");
 		process.stdout.write(port.toString());
 		process.stdout.write("\n");
-		socket.write("CanvOS 3 OS\n");
+		socket.write("CanvOS3\n");
 		socket.write("Type \"nc\" for verification: ");
 		var data = await serv.stdin.gets();
 		socket.write("Recieved data\n");
 
 	});
-	serv.stdin = new Files.CStream();
+	serv.stdin = new Stream.CStream();
 	serv.listen(port);
 	servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
 		serv.close(() => {

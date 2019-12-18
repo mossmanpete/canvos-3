@@ -66,5 +66,39 @@ function checker(user, p) {
 		lastCl = cl;
 	}
 	tokens.push([lastCl, currenttoken]);
-	return tokens;
+	var object = [];
+	for(var i = 0; i < tokens.length; i++) {
+		var token = tokens[i];
+		if (token[1] === "|") {
+			object.push({
+				op: "|",
+				b: object.pop(),
+				a: object.pop()
+			});
+		} else if (token[1] === "&") {
+			object.push({
+				op: "&",
+				b: object.pop(),
+				a: object.pop()
+			});
+		} else if (token[1] === "!") {
+			object.push({
+				op: "!",
+				a: object.pop()
+			});
+		} else if (token[1] === "+") {
+			object.push({
+				op: "+",
+				a: object.pop()
+			});
+		} else if (token[1] === "-") {
+			object.push({
+				op: "-",
+				a: object.pop()
+			});
+		} else {
+			object.push(token[1]);
+		}
+	}
+	return object;
 }
