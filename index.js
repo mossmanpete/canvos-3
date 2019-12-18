@@ -1,6 +1,5 @@
 var net = require("net");
 var Stream = require("./stream.js");
-var Perms = require("./perms.js");
 
 process.stdout.write("starting\n");
 
