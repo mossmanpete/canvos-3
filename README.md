@@ -1,9 +1,10 @@
 # Canvos v3
 Reconstructed from the ground up to be better
+Built on Processing 3, Node.js, and a various array of other things, perhaps eventually including linux
 
-# currently updating files, do not clone
+## Currently updating files, do not clone
 
-## New Features (as opposed to old CanvOS versions)
+## New Features (as opposed to old(er) CanvOS versions)
 - Client now runs in app as opposed to web browser (faster, better performance)
 - Can utilize storage both on host and client devices, like two drives
 - Upgraded terminal
