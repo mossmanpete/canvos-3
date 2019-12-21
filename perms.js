@@ -142,7 +142,12 @@ class CPerms {
 			} else if (token[1] === "+") {
 				object.push(user.name === object.pop());
 			} else if (token[1] === "-") {
-				object.push(user.inGroup(groups.getGroup(object.pop())));
+				var group = object.pop();
+				if (group === "all") {
+					object.push(true);
+				} else {
+					object.push(user.inGroup(groups.getGroup(group)));
+				}
 			} else {
 				object.push(token[1]);
 			}

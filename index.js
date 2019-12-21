@@ -1,5 +1,8 @@
 var net = require("net");
 var Stream = require("./stream.js");
+var crypto = require("crypto");
+var files = require("./files.js");
+var https = require("https");
 
 process.stdout.write("starting\n");
 
@@ -47,9 +50,20 @@ server.listen(42069);
 process.stdout.write("[Server] CanvOS3 is now ready for requests\n");
 
 
-function pause(m){return new Promise(h=>setTimeout(h,m))}
+var pause=m=>new Promise(h=>setTimeout(h,m));
 
 function createServer(port) {
+	https.get("https://www.random.org/cgi-bin/randbyte?nbytes=8&format=h", (res) => {
+		var buf = "";
+		res.on('data', (d) => {
+	    buf += d;
+	  });
+		res.on('end', () => {
+			serv.secret = buf.split(" ").join("");
+		})
+	}).on('error', (e) => {
+	  throw e;
+	});
 	ports.add(port);
 	var serv = net.createServer(async function (socket) {;
 		socket.on("data", (data) => {
@@ -60,10 +74,20 @@ function createServer(port) {
 		process.stdout.write("\n");
 		socket.write("CanvOS3\n");
 		socket.write("Type \"nc\" for verification: ");
-		var data = await serv.stdin.gets();
-		socket.write("Recieved data\n");
+		var user_terminal = await serv.stdin.gets();
+		socket.write("Recieved verification\n");
+		socket.write("username: ");
+		var username = (await serv.stdin.gets()).slice(0, -1);
+		serv.hash = crypto.createHash('sha256');
+		socket.write("password: \\p1");
+		serv.hash.update((await serv.stdin.gets()).slice(0, -1));
+		var password = serv.hash.digest('hex');
+		socket.write("\\p0Please wait...");
 
 	});
+	serv.write = (data) => {
+
+	};
 	serv.stdin = new Stream.CStream();
 	serv.listen(port);
 	servers[port.toString()] = {server: serv, timeout: setTimeout(() => {

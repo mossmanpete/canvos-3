@@ -1,4 +1,4 @@
 {"files":[
-	{"name": "app", "perns": "all"},
-	{"name": "home", "perms": "all"}
+	{"name": "app", "perns": "all-"},
+	{"name": "home", "perms": "all-"}
 ]}
