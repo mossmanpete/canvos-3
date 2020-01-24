@@ -2,6 +2,8 @@
 Reconstructed from the ground up to be better
 Built on Processing 3, Node.js, and a various array of other things, perhaps eventually including linux
 
+# IF YOU SEE THIS IN A SOURCEFORGE PAGE DONT DOWNLOAD IT
+
 ## Currently updating files, do not clone
 
 ## New Features (as opposed to old(er) CanvOS versions)
