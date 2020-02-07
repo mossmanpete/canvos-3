@@ -1,4 +1,4 @@
 {"files":[
-	{"name": "app", "perns": "all-"},
+	{"name": "app", "perms": "all-/overlord+"},
 	{"name": "home", "perms": "all-"}
 ]}

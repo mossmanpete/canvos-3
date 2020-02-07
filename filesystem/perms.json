@@ -1,8 +1,10 @@
 {
 	"groups": [
-
+		{"name": "people", "color": "^FFFF00FF"}
 	],
 	"users": [
-		{"name": "root", "groups": []}
+		{"name": "overlord", "groups": []},
+		{"name": "arsentical", "groups": ["people"]},
+		{"name": "redmikepumpkin", "groups": ["people"]}
 	]
 }
