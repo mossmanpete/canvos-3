@@ -11,7 +11,9 @@
     "url": "git+https://github.com/creatively-stupid/canvos-3.git"
   },
   "dependencies": {
-    "crypto-js": "^3.1.9-1"
+    "@types/node": "^13.7.0",
+    "crypto-js": "^3.1.9-1",
+    "random-number-csprng": "^1.0.2"
   },
   "keywords": [
     "CanvOS",

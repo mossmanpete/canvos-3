@@ -17,7 +17,7 @@ var server = net.createServer(async function (socket) {
 		if (i === 10000) socket.write("\nSearching for an available port")
 		else if (i > 10000 & i % 10000 === 0) socket.write(".")
 		if (i % 1000 === 0) await pause(0)
-		port = Math.floor(Math.random()*5) + 2069
+		port = Math.floor(Math.random() * 40000) + 2069
 		process.stdout.write("[Matchmaking] Trying port ")
 		process.stdout.write(port.toString())
 		process.stdout.write(" (")
@@ -53,17 +53,19 @@ process.stdout.write("[Server] CanvOS3 is now ready for requests\n")
 var pause=m=>new Promise(h=>setTimeout(h,m))
 
 function getBytes() {
-	return new Promise(yey => {
+	return new Promise((yey, nay) => {
+		console.log("[getBytes] sending request...");
 		https.get("https://www.random.org/cgi-bin/randbyte?nbytes=8&format=h", (res) => {
 			var buf = ""
 			res.on('data', (d) => {
 				buf += d
 			})
 			res.on('end', () => {
-				return buf.split(" ").join("").split("\n").join("").split("\r").join("")
+				console.log("[getBytes] data recieved");
+				yey(buf.split(" ").join("").split("\n").join("").split("\r").join(""))
 			})
 		}).on('error', (e) => {
-			throw e
+			nay(e);
 		})
 	})
 }
@@ -82,23 +84,27 @@ function createServer(port) {
 		serv.write("Type \"nc\" for verification: ")
 		var user_terminal = await serv.stdin.gets()
 		serv.write("Recieved verification\n")
-		var bytes = ""
-		var data = ""
+		var bytes = "a"
+		var data = "b"
+		var p = ""
 		while (data !== bytes) {
 			serv.write("username: ")
 			var username = await serv.read();
-			var p = files.getUserPasswd(username)
-			if (!p) throw new Error("Invalid Username")
+			p = await files.getUserPasswd(username)
+			if (!p) {
+				serv.write("Invalid Username!\n")
+				continue
+			}
 			bytes = await getBytes()
-			serv.write("verification: ")
+			serv.write("authentication code: ")
 			serv.write(crypto.aes.encrypt(bytes, p))
-			p = null;
+			serv.write("\nresponse: ")
 			data = crypto.aes.decrypt(await serv.read(), p).split("").reverse().join("")
 		}
 		serv.write("password: \\p1")
 		var password = crypto.sha512(crypto.aes.decrypt(await serv.read(), p))
 		serv.write("\\p0Please wait...\n")
-		if (password === files.getUserPasswd(username)) {
+		if (password === p) {
 			serv.write("Password correct!")
 		} else {
 			serv.write("Somehow your password doesnt match after password verification.\n")
@@ -106,18 +112,27 @@ function createServer(port) {
 			serv.write("1. an internal error has occurred, such as a hash collision or like gamma radiation or something i have no idea.\n")
 			serv.write("2. you are using a hacked / 3rd party client and you only have the hash, not the password (if this is the case please don't)\n")
 			serv.write("3. i have no idea this error isn't supposed to happen that's why it's called an error\n")
-			serv.write("The connection will now stop, please contact your server's CanvOS manager if problems persist\n")
+			serv.write("The connection will now stop, please contact your server's CanvOS manager (or the CanvOS team) if problems persist\n")
 			return;
 		}
-
 	})
 	serv.write = (data) => {
 		if (serv.key === null) serv.socket.write(data);
 		else serv.socket.write(crypto.aes.encrypt(data, serv.key))
 	}
-	serv.read = async function() {
-		if (serv.key === null) return (await serv.stdin.gets()).slice(0, -1)
-		else return crypto.aes.decrypt((await serv.stdin.gets()).slice(0, -1), serv.key)
+	serv.read = function() {
+		return new Promise(yey => {
+			if (serv.key === null) {
+				serv.stdin.gets().then(data => {
+					yey(data.slice(0, -1))
+				})
+			}
+			else {
+				serv.stdin.gets().then(data => {
+					yey(crypto.aes.decrypt(data.slice(0, -1), serv.key))
+				})
+			}
+		})
 	}
 	serv.key = null;
 	serv.stdin = new Stream.CStream()

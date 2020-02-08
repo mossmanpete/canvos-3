@@ -70,9 +70,16 @@ function getUserData(name) {
 	return groups.users.find(user => user.name === name);
 }
 function getUserPasswd(name) {
-	fs.readFile(path.join(root, "perms.json"), (err, data) => {
-		if (err) throw new Error("unable to load permission file");
-		return JSON.parse(data).users.find(user => user.name === name).password
+	return new Promise((yey, nay) => {
+		fs.readFile(path.join(root, "perms2.json"), (err, data) => {
+			if (err) nay(err);
+			var user = JSON.parse(data).users.find(user => user.name === name)
+			if (user) yey(user.password);
+			else {
+				user = null
+				yey(undefined);
+			}
+		})
 	})
 }
 
