@@ -66,19 +66,50 @@ module.exports = {
 				"1111": "f",
 			}
 			for (var i = 0; i < chars; i++) {
-				var c1 = out[i * 4];
-				var c2 = out[i * 4 + 1];
-				var c3 = out[i * 4 + 2];
-				var c4 = out[i * 4 + 3];
-				if (c1 === undefined) c1 = '0';
-				if (c2 === undefined) c2 = '0';
-				if (c3 === undefined) c3 = '0';
-				if (c4 === undefined) c4 = '0';
-				var cchar = c1 + c2 + c3 + c4;
-				nout += table[cchar];
+				var c1 = out[i * 4]
+				var c2 = out[i * 4 + 1]
+				var c3 = out[i * 4 + 2]
+				var c4 = out[i * 4 + 3]
+				if (c1 === undefined) c1 = '0'
+				if (c2 === undefined) c2 = '0'
+				if (c3 === undefined) c3 = '0'
+				if (c4 === undefined) c4 = '0'
+				var cchar = c1 + c2 + c3 + c4
+				nout += table[cchar]
+			}
+			out = nout.split("").reverse().join("")
+		} else if (repile === 2) {
+			out = out.split("").reverse().join("")
+			var chars = Math.ceil(out / 2)
+			var nout = ""
+			var table = {
+				"00": "0",
+				"01": "4",
+				"02": "8",
+				"03": "c",
+				"10": "1",
+				"11": "5",
+				"12": "9",
+				"13": "d",
+				"20": "2",
+				"21": "6",
+				"22": "a",
+				"23": "e",
+				"30": "3",
+				"31": "7",
+				"32": "b",
+				"33": "f",
+			}
+			for (var i = 0; i < chars; i++) {
+				var c1 = out[i * 2]
+				var c2 = out[i * 2 + 1]
+				if (c1 === undefined) c1 = '0'
+				if (c2 === undefined) c2 = '0'
+				var cchar = c1 + c2
+				nout += table[cchar]
 			}
 			out = nout.split("").reverse().join("")
 		}
-		return out.toLowerCase();
+		return out.toLowerCase()
 	}
 }

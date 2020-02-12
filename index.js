@@ -50,7 +50,7 @@ server.listen(42069)
 process.stdout.write("[Server] CanvOS3 is now ready for requests\n")
 
 
-var pause=m=>new Promise(h=>setTimeout(h,m))
+var pause = m => new Promise(h => setTimeout(h, m))
 
 function getBytes() {
 	return new Promise((yey, nay) => {
@@ -75,7 +75,7 @@ function createServer(port) {
 	var serv = net.createServer(async function (socket) {
 		socket.on("data", (data) => {
 			serv.stdin.puts(data)
-		}) 
+		})
 		serv.socket = socket
 		process.stdout.write("[Server] Established OS connection on port ")
 		process.stdout.write(port.toString())
@@ -120,7 +120,7 @@ function createServer(port) {
 		if (serv.key === null) serv.socket.write(data);
 		else serv.socket.write(crypto.aes.encrypt(data, serv.key))
 	}
-	serv.read = function() {
+	serv.read = function () {
 		return new Promise(yey => {
 			if (serv.key === null) {
 				serv.stdin.gets().then(data => {
@@ -137,13 +137,15 @@ function createServer(port) {
 	serv.key = null;
 	serv.stdin = new Stream.CStream()
 	serv.listen(port)
-	servers[port.toString()] = {server: serv, timeout: setTimeout(() => {
-		serv.close(() => {
-			ports.delete(port)
-			servers[port.toString()] = undefined
-		})
-		process.stdout.write("[Server] OS server on port ")
-		process.stdout.write(port.toString())
-		process.stdout.write(" expired\n")
-	}, 10000)}
+	servers[port.toString()] = {
+		server: serv, timeout: setTimeout(() => {
+			serv.close(() => {
+				ports.delete(port)
+				servers[port.toString()] = undefined
+			})
+			process.stdout.write("[Server] OS server on port ")
+			process.stdout.write(port.toString())
+			process.stdout.write(" expired\n")
+		}, 10000)
+	}
 }
