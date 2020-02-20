@@ -22,5 +22,6 @@ Built on  C++, Node.js, and a various array of other things, perhaps eventually 
   - Linux
   - Mac
   - Windows
+  - ARM versions of above
   - RISC-V eventually
 - The server will eventually be packaged into a minimal Ubuntu/other linux ISO
