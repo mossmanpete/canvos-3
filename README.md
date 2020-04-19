@@ -2,6 +2,11 @@
 Reconstructed from the ground up to be better
 Built on  C++, Node.js, and a various array of other things, perhaps eventually including linux (demos made in Processing 3)
 
+# Why there hasn't been much progress in a while
+- Covid-19 pandemic
+- procrastination
+- mostly just working on other projects elsewhere
+
 ## Currently updating files, do not clone
 
 ## New Features (as opposed to old(er) CanvOS versions)
